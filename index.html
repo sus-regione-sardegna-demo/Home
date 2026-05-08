@@ -8,7 +8,7 @@
     <title>Portale SID — Dimostrazione</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-page="login">
+  <body data-page="home">
     <div class="demo-banner" role="status">
       Ambiente di collaudo: dati e servizi mostrati sono inventati. Non usare
       password reali.
@@ -84,44 +84,6 @@
           quando colleghi il portale vero. L’immagine di sfondo è
           <code class="page-hero__code">assets/foto1.jpg</code>.
         </p>
-      </div>
-    </section>
-
-    <section class="login-section" aria-labelledby="page-title">
-      <div class="login-section__inner">
-        <main class="card">
-          <div class="brand">
-            <h2 id="page-title">Accesso area riservata</h2>
-          </div>
-          <div id="login-error" class="error-msg" role="alert"></div>
-          <form id="login-form" novalidate>
-            <div class="field">
-              <label for="username">Identificativo o posta elettronica</label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                autocomplete="username"
-                required
-              />
-            </div>
-            <div class="field">
-              <label for="password">Chiave di accesso</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-              />
-            </div>
-            <div class="checkbox-row">
-              <input id="remember" name="remember" type="checkbox" />
-              <label for="remember">Memorizza su questo dispositivo</label>
-            </div>
-            <button type="submit" id="submit-btn" class="btn">Entra</button>
-          </form>
-        </main>
       </div>
     </section>
 
