@@ -1,0 +1,59 @@
+# Trace: ACTIVITY-CODE — Publish static demo to gh-pages for GitHub Pages
+# Uses ./DEMO when present (monorepo); otherwise publishes repo root (flat repo).
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "DEMO/**"
+      - "index.html"
+      - "dashboard.html"
+      - "styles.css"
+      - "app.js"
+      - ".github/workflows/deploy-demo-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-demo
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect site layout
+        id: site
+        shell: bash
+        run: |
+          if [ -f DEMO/index.html ]; then
+            echo "use_demo=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_demo=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish from DEMO/
+        if: steps.site.outputs.use_demo == 'yes'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./DEMO
+          publish_branch: gh-pages
+          force_orphan: false
+
+      - name: Publish from repository root
+        if: steps.site.outputs.use_demo == 'no'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          force_orphan: false
+          exclude_assets: |
+            .github
