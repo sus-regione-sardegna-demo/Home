@@ -1,3 +1,3 @@
-# Mock statico
+# Sportello Unico dei Servizi — mock statico
 
-HTML/CSS/JS statico per anteprima grafica (nessun login).
+Anteprima HTML/CSS/JS senza backend. Risorse in `assets/` (vedi `EXPECTED_ASSETS.txt`).
