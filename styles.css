@@ -410,6 +410,7 @@ body {
 /* --- Desktop mega-dropdowns (hover / focus-within) --- */
 .site-nav__item {
   position: relative;
+  flex-shrink: 0;
 }
 
 .site-nav__link {
