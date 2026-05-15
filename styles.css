@@ -80,7 +80,7 @@ body {
   background: transparent;
   display: grid;
   grid-template-rows: 1fr auto auto;
-  transition: box-shadow var(--ease-header), grid-template-rows 0.3s ease;
+  /* [DEMO-SIRA-RESTYLE] Static header: no animated collapse on scroll */
 }
 
 .site-header--scrolled {
@@ -99,7 +99,6 @@ body {
   font-size: 0.8125rem;
   overflow: hidden;
   min-height: 0;
-  transition: opacity 0.25s ease, padding 0.3s ease;
 }
 
 .site-header--scrolled .site-header__util {
@@ -165,7 +164,6 @@ body {
   background: var(--color-util-cta);
   border: none;
   border-radius: 0; /* [TASK-BUTTON-RESTYLE] Squared corners as per photo 2 */
-  transition: background 0.15s ease;
 }
 
 .site-header__util-cta:hover {
@@ -181,7 +179,6 @@ body {
 .site-header__ribbon {
   background: var(--color-header-ribbon-open);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  transition: background-color var(--ease-header);
   padding: 1.5rem 0;
 }
 
@@ -230,7 +227,6 @@ body {
   font: inherit;
   cursor: pointer;
   flex-shrink: 0;
-  transition: color var(--ease-header);
 }
 
 .site-header__menu-label {
@@ -238,7 +234,6 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  transition: color var(--ease-header);
 }
 
 .site-header__menu:focus-visible {
@@ -272,8 +267,6 @@ body {
   flex-shrink: 0;
   justify-self: start;
   text-align: left;
-  /* Only transform is compositor-friendly; avoid transitioning flex-* (layout thrash). */
-  transition: transform var(--ease-header);
 }
 
 .site-header--scrolled .siralogo {
@@ -308,7 +301,6 @@ body {
   height: 4px;
   margin: 0.45rem 0 0.45rem;
   max-height: 12px;
-  transition: opacity var(--ease-header);
 }
 
 .siralogo__trirule > span {
@@ -337,7 +329,6 @@ body {
   max-width: 22rem;
   line-height: 1.25;
   text-transform: none;
-  transition: opacity var(--ease-header);
 }
 
 .site-header--scrolled .siralogo__subtitle {
@@ -361,7 +352,6 @@ body {
   text-align: right;
   justify-self: end;
   align-self: center;
-  transition: opacity var(--ease-header);
   max-height: 14rem;
   opacity: 1;
   overflow: hidden;
@@ -378,9 +368,8 @@ body {
   display: block;
   background: var(--color-nav-bg);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  transition: opacity 0.25s ease, padding 0.3s ease;
-  /* Horizontal scroll when many top-level items (demo stress layout). */
-  overflow-x: auto;
+  /* overflow-x:auto forces overflow-y to auto in browsers → vertical scrollbar on the blue bar; keep visible so dropdowns are not clipped */
+  overflow-x: visible;
   overflow-y: visible;
   padding: 0 var(--layout-page-padding);
 }
@@ -427,8 +416,7 @@ body {
   text-decoration: none;
   color: #fff;
   white-space: nowrap;
-  /* Font size steps with layout; animating it causes jank during header compact toggle. */
-  transition: background 0.12s ease, padding var(--ease-header);
+  /* Font size steps with layout; static header — no padding animation */
   border: none;
   background: transparent;
   font-family: var(--font-sans);
@@ -474,7 +462,6 @@ body {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
   z-index: 160;
 }
 
