@@ -85,8 +85,7 @@ body {
 
 .site-header--scrolled {
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.14);
-  /* Collapse util row only; keep ribbon + primary nav so dropdowns stay usable. */
-  grid-template-rows: 0fr auto auto;
+  grid-template-rows: 0fr auto 0fr;
 }
 
 .site-header__util {
@@ -107,6 +106,12 @@ body {
   opacity: 0;
   padding-top: 0;
   padding-bottom: 0;
+  pointer-events: none;
+}
+
+.site-header--scrolled .site-nav {
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -374,8 +379,9 @@ body {
   background: var(--color-nav-bg);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   transition: opacity 0.25s ease, padding 0.3s ease;
-  /* Allow desktop submenus to paint below the bar (was clipping with overflow: hidden). */
-  overflow: visible;
+  /* Horizontal scroll when many top-level items (demo stress layout). */
+  overflow-x: auto;
+  overflow-y: visible;
   padding: 0 var(--layout-page-padding);
 }
 
@@ -385,7 +391,8 @@ body {
   align-items: stretch;
   gap: 0;
   max-width: none;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   margin: 0 auto;
   padding: 0;
   list-style: none;
@@ -406,7 +413,6 @@ body {
 /* --- Desktop mega-dropdowns (hover / focus-within) --- */
 .site-nav__item {
   position: relative;
-  flex-shrink: 0;
 }
 
 .site-nav__link {
@@ -498,6 +504,11 @@ body {
 
 /* Nav links shouldn't change font-size or padding on scroll, it causes layout thrashing */
 
+
+/* Post-transaction: primary bar removed from layout (see initPostTransactionPrimaryNav in app.js). */
+body[data-transaction-complete="true"] #site-primary-nav.site-nav {
+  display: none;
+}
 
 /* --- Menu toggle: default 3 barre; .site-header__menu--bars-2 = due linee (foto 1); .is-open = drawer (foto 8) --- */
 .site-header__menu-x {
