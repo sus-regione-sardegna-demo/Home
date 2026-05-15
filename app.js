@@ -138,27 +138,20 @@
   }
 
   /**
-   * After a completed transaction, hide the desktop primary bar (HOME, …) so
-   * only the ribbon / util header remains. Trigger via:
-   * - <body data-transaction-complete="true">
-   * - URL ?txComplete=1 or ?tx=complete
-   * - window.siraDemo.setPrimaryNavHidden(true) from app code
-   * Trace: DEMO-SIRA-RESTYLE — post-transaction header (replace with activity id if provided).
+   * Desktop primary nav: click toggles submenus; outside click closes all.
    */
-  function initPostTransactionPrimaryNav() {
+  function initDesktopNavDropdowns() {
     var nav = document.getElementById("site-primary-nav");
     if (!nav) {
       return;
     }
 
-    // Toggle aria-expanded on click for desktop triggers to match mobile behavior
     var triggers = nav.querySelectorAll(".site-nav__link--trigger");
     triggers.forEach(function (btn) {
       btn.addEventListener("click", function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
         var expanded = btn.getAttribute("aria-expanded") === "true";
-        // Close other desktop menus
         triggers.forEach(function (other) {
           if (other !== btn) other.setAttribute("aria-expanded", "false");
         });
@@ -171,28 +164,6 @@
         btn.setAttribute("aria-expanded", "false");
       });
     });
-
-    function applyHidden(hidden) {
-      nav.hidden = !!hidden;
-      if (hidden) {
-        document.body.dataset.transactionComplete = "true";
-      } else {
-        delete document.body.dataset.transactionComplete;
-      }
-    }
-
-    var params = new URLSearchParams(window.location.search);
-    var fromUrl =
-      params.get("txComplete") === "1" || params.get("tx") === "complete";
-    var fromBody = document.body.dataset.transactionComplete === "true";
-    if (fromUrl || fromBody) {
-      applyHidden(true);
-    }
-
-    window.siraDemo = window.siraDemo || {};
-    window.siraDemo.setPrimaryNavHidden = function (hidden) {
-      applyHidden(!!hidden);
-    };
   }
 
   /**
@@ -285,10 +256,10 @@
 
   initCookieBanner();
   initStickySiteHeader();
-  initPostTransactionPrimaryNav();
+  initDesktopNavDropdowns();
   initSiteDrawer();
 
-  if (document.body.dataset.page === "home") {
+  if (document.body.getAttribute("data-page") === "home") {
     initTabSections();
   }
 })();
