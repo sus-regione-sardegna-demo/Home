@@ -4,13 +4,6 @@
   "use strict";
 
   var COOKIE_CONSENT_KEY = "susDemoCookieConsent";
-  /** Enter compact header after this scroll offset (px). */
-  var SCROLL_COMPACT_ENTER_PX = 40;
-  /**
-   * Leave compact only when near top (px). Hysteresis avoids oscillation when
-   * collapsing the util row changes layout and scroll position hovers the threshold.
-   */
-  var SCROLL_COMPACT_EXIT_PX = 6;
 
   /**
    * Cookie banner: hide after accept, persist preference.
@@ -72,16 +65,12 @@
   }
 
   /**
-   * Sticky site header: entire <header> uses position:sticky under .demo-banner.
-   * Adds .site-header--scrolled after scroll to collapse util row, notice, and tighten nav.
-   * Uses scroll hysteresis so layout changes from collapsing the util bar do not flip the
-   * compact state rapidly (perceived as a choppy transition).
+   * Sets --sticky-top-offset when a .demo-banner exists. No scroll-driven compact header
+   * (.site-header--scrolled): layout stays aligned with static reference.
    */
   function initStickySiteHeader() {
     var header = document.querySelector(".site-header");
     var demoBanner = document.querySelector(".demo-banner");
-    var notice = document.querySelector(".site-header__notice");
-    var util = document.querySelector(".site-header__util");
     if (!header) {
       return;
     }
@@ -91,50 +80,8 @@
       document.documentElement.style.setProperty("--sticky-top-offset", h + "px");
     }
 
-    function setCompactAria(compact) {
-      if (notice) {
-        if (compact) {
-          notice.setAttribute("aria-hidden", "true");
-        } else {
-          notice.removeAttribute("aria-hidden");
-        }
-      }
-      if (util) {
-        if (compact) {
-          util.setAttribute("aria-hidden", "true");
-        } else {
-          util.removeAttribute("aria-hidden");
-        }
-      }
-    }
-
-    function updateFromScroll() {
-      var y = window.scrollY || document.documentElement.scrollTop;
-      var wasCompact = header.classList.contains("site-header--scrolled");
-      var compact =
-        wasCompact ? y > SCROLL_COMPACT_EXIT_PX : y > SCROLL_COMPACT_ENTER_PX;
-      header.classList.toggle("site-header--scrolled", compact);
-      setCompactAria(compact);
-    }
-
-    var ticking = false;
-    function requestUpdate() {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(function () {
-          ticking = false;
-          updateFromScroll();
-        });
-      }
-    }
-
     setTopOffset();
-    updateFromScroll();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", function () {
-      setTopOffset();
-      requestUpdate();
-    });
+    window.addEventListener("resize", setTopOffset);
   }
 
   /**
@@ -175,17 +122,16 @@
     function applyHidden(hidden) {
       nav.hidden = !!hidden;
       if (hidden) {
-        document.body.setAttribute("data-transaction-complete", "true");
+        document.body.dataset.transactionComplete = "true";
       } else {
-        document.body.removeAttribute("data-transaction-complete");
+        delete document.body.dataset.transactionComplete;
       }
     }
 
     var params = new URLSearchParams(window.location.search);
     var fromUrl =
       params.get("txComplete") === "1" || params.get("tx") === "complete";
-    var fromBody =
-      document.body.getAttribute("data-transaction-complete") === "true";
+    var fromBody = document.body.dataset.transactionComplete === "true";
     if (fromUrl || fromBody) {
       applyHidden(true);
     }
@@ -213,10 +159,6 @@
     function setOpen(open) {
       drawer.classList.toggle("is-open", open);
       toggle.classList.toggle("is-open", open);
-      var header = document.querySelector(".site-header");
-      if (header) {
-        header.classList.toggle("is-menu-open", open);
-      }
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
       drawer.setAttribute("aria-hidden", open ? "false" : "true");
       document.body.classList.toggle("is-drawer-open", open);
